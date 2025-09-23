@@ -1,0 +1,27 @@
+import cv2
+import os
+
+input_folder = 'Forest images'
+output_folder = 'edges_output'
+os.makedirs(output_folder, exist_ok=True)
+
+for filename in os.listdir(input_folder):
+    if filename.lower().endswith(('.jpg', '.jpeg', '.png', '.bmp')):
+        input_path = os.path.join(input_folder, filename)
+        image = cv2.imread(input_path, cv2.IMREAD_GRAYSCALE)
+        
+        canny_edges = cv2.Canny(image, 100, 200)  
+        canny_output_path = os.path.join(output_folder, f'canny_{filename}')
+        cv2.imwrite(canny_output_path, canny_edges)
+        
+        sobel_x = cv2.Sobel(image, cv2.CV_64F, 1, 0, ksize=3)  
+        sobel_y = cv2.Sobel(image, cv2.CV_64F, 0, 1, ksize=3)  
+        sobel_combined = cv2.magnitude(sobel_x, sobel_y)  
+        
+        sobel_combined = cv2.normalize(sobel_combined, None, 0, 255, cv2.NORM_MINMAX)
+        sobel_combined = sobel_combined.astype('uint8')
+
+        sobel_output_path = os.path.join(output_folder, f'sobel_{filename}')
+        cv2.imwrite(sobel_output_path, sobel_combined)
+
+print("Edge detection (Canny and Sobel) completed for all images.")

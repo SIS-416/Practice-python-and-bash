@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country Capital & Number to Words</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        .capital { font-size: 20px; font-weight: bold; color: blue; margin-top: 10px; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h2>Select a Country</h2>
+    <select id="countrySelect" onchange="showCapital()">
+        <option value="">--Select a country--</option>
+        <option value="USA">USA</option>
+        <option value="India">India</option>
+        <option value="France">France</option>
+        <option value="Japan">Japan</option>
+        <option value="Brazil">Brazil</option>
+    </select>
+    <p class="capital" id="capitalDisplay"></p>
+    
+    <h2>Convert Number to Words</h2>
+    <input type="text" id="numberInput" placeholder="Enter a number (0-999)" oninput="convertToWords()">
+    <p class="error" id="errorMessage"></p>
+    <p id="wordOutput"></p>
+    
+    <script>
+        const capitals = {
+            "USA": "Washington, D.C.",
+            "India": "New Delhi",
+            "France": "Paris",
+            "Japan": "Tokyo",
+            "Brazil": "Brasilia"
+        };
+        
+        function showCapital() {
+            const country = document.getElementById("countrySelect").value;
+            document.getElementById("capitalDisplay").textContent = capitals[country] || "";
+        }
+        
+        function convertToWords() {
+            const numberInput = document.getElementById("numberInput").value;
+            const errorMessage = document.getElementById("errorMessage");
+            const wordOutput = document.getElementById("wordOutput");
+            
+            if (!/^[0-9]{1,3}$/.test(numberInput)) {
+                errorMessage.textContent = "Invalid input! Please enter a number between 0 and 999.";
+                wordOutput.textContent = "";
+                return;
+            }
+            
+            errorMessage.textContent = "";
+            wordOutput.textContent = numberToWords(parseInt(numberInput, 10));
+        }
+        
+        function numberToWords(num) {
+            if (num === 0) return "Zero";
+            
+            const ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+            const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+            
+            let words = "";
+            if (num >= 100) {
+                words += ones[Math.floor(num / 100)] + " Hundred ";
+                num %= 100;
+            }
+            if (num >= 20) {
+                words += tens[Math.floor(num / 10)] + " ";
+                num %= 10;
+            }
+            if (num > 0) {
+                words += ones[num];
+            }
+            
+            return words.trim();
+        }
+    </script>
+</body>
+</html>

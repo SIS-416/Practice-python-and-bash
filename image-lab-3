@@ -1,0 +1,23 @@
+import cv2
+import os
+
+input_folder = 'Forest images'
+output_folder = 'denoised_images'
+
+os.makedirs(output_folder, exist_ok=True)
+
+for filename in os.listdir(input_folder):
+    if filename.lower().endswith(('.jpg', '.jpeg', '.png', '.bmp')):
+        input_path = os.path.join(input_folder, filename)
+        output_path = os.path.join(output_folder, f'denoised_{filename}')
+    
+        image = cv2.imread(input_path, cv2.IMREAD_GRAYSCALE)
+      
+        gaussian_blur = cv2.GaussianBlur(image, (5, 5), 0)
+
+        median_blur = cv2.medianBlur(gaussian_blur, 5)
+       
+        cv2.imwrite(output_path, median_blur)
+
+    
+print("All images denoised using Gaussian and Median Blur.")
