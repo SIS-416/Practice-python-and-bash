@@ -1,0 +1,15 @@
+#!/bin/bash
+
+oIFS=$IFS
+
+IFS=":"
+
+while read login pass uid gid name home shell;
+do
+	if [ "$shell" != "/bin/false" ] && [ ! -z "${home%\/var\/*}" ];then
+		echo "User $login ($name) lives in $home and uses `basename $shell`"
+	fi
+done < /etc/passwd
+oIFS=$IFS
+
+
